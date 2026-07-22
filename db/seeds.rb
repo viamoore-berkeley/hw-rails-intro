@@ -9,6 +9,7 @@
 #   end
 
 # Seed the RottenPotatoes DB with some movies.
+Movie.delete_all
 movies = [{ title: 'Aladdin', rating: 'G', release_date: '25-Nov-1992' },
           { title: 'The Terminator', rating: 'R', release_date: '26-Oct-1984' },
           { title: 'When Harry Met Sally', rating: 'R', release_date: '21-Jul-1989' },

@@ -3,25 +3,37 @@ class MoviesController < ApplicationController
 
   # GET /movies or /movies.json
   def index
+    # Load Session
+    flash[:notice] = params
+    if params[:sort_by] == nil and params[:ratings] == nil
+      sort_by = session[:sort_by]
+      ratings = session[:ratings]
+    else
+      sort_by = params[:sort_by]
+      ratings = params[:ratings]
+    end
     # Sorting Decider
-    if params[:sort_by] == 'release_date'
+    if sort_by == 'release_date'
       @options_for_select = [["Release date", "release_date"], ["Title", "title"]]
     else 
       @options_for_select = [["Title", "title"], ["Release date", "release_date"]]
     end
     # Setup Checkboxes
     @all_ratings = Movie.all_ratings
-    if params[:ratings] == nil or params[:ratings].empty?
+    if ratings == nil or ratings.empty?
       @ratings_to_show = @all_ratings
     else 
-      @ratings_to_show = params[:ratings].keys
+      @ratings_to_show = ratings.keys
     end
     # Select Movies
-    if params[:ratings] == nil
-      @movies = Movie.all.order(params[:sort_by])
+    if ratings == nil
+      @movies = Movie.all.order(sort_by)
     else
-      @movies = Movie.with_ratings(params[:ratings].keys).order(params[:sort_by])
+      @movies = Movie.with_ratings(ratings.keys).order(sort_by)
     end
+    # Save Session
+    session[:sort_by] = sort_by
+    session[:ratings] = ratings
   end
 
   # GET /movies/1 or /movies/1.json

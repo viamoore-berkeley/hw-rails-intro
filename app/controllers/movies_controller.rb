@@ -4,7 +4,6 @@ class MoviesController < ApplicationController
   # GET /movies or /movies.json
   def index
     # Load Session
-    flash[:notice] = params
     if params[:sort_by] == nil and params[:ratings] == nil
       sort_by = session[:sort_by]
       ratings = session[:ratings]

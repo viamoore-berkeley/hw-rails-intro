@@ -3,7 +3,19 @@ class MoviesController < ApplicationController
 
   # GET /movies or /movies.json
   def index
-    @movies = Movie.all
+    # Setup Checkboxes
+    @all_ratings = Movie.all_ratings
+    if params[:ratings] == nil or params[:ratings].empty?
+      @ratings_to_show = @all_ratings
+    else 
+      @ratings_to_show = params[:ratings].keys
+    end
+    # Display Movies
+    if params[:ratings] == nil
+      @movies = Movie.all
+      return
+    end
+    @movies = Movie.with_ratings params[:ratings].keys
   end
 
   # GET /movies/1 or /movies/1.json

@@ -3,6 +3,12 @@ class MoviesController < ApplicationController
 
   # GET /movies or /movies.json
   def index
+    # Sorting Decider
+    if params[:sort_by] == 'release_date'
+      @options_for_select = [["Release date", "release_date"], ["Title", "title"]]
+    else 
+      @options_for_select = [["Title", "title"], ["Release date", "release_date"]]
+    end
     # Setup Checkboxes
     @all_ratings = Movie.all_ratings
     if params[:ratings] == nil or params[:ratings].empty?
@@ -10,12 +16,12 @@ class MoviesController < ApplicationController
     else 
       @ratings_to_show = params[:ratings].keys
     end
-    # Display Movies
+    # Select Movies
     if params[:ratings] == nil
-      @movies = Movie.all
-      return
+      @movies = Movie.all.order(params[:sort_by])
+    else
+      @movies = Movie.with_ratings(params[:ratings].keys).order(params[:sort_by])
     end
-    @movies = Movie.with_ratings params[:ratings].keys
   end
 
   # GET /movies/1 or /movies/1.json
